@@ -1,0 +1,22 @@
+@baseUrl = http://127.0.0.1:3001
+
+### Состояние сервера и PostgreSQL
+GET {{baseUrl}}/api/health
+
+### Комнаты
+GET {{baseUrl}}/api/rooms
+
+### Одна комната
+GET {{baseUrl}}/api/rooms/react
+
+### Последние сообщения
+GET {{baseUrl}}/api/rooms/react/messages?limit=30
+
+### Старые сообщения (замени 42 на nextBefore из своего ответа)
+GET {{baseUrl}}/api/rooms/react/messages?limit=30&before=42
+
+### Пропущенные сообщения (замени 42 на последний полученный id)
+GET {{baseUrl}}/api/rooms/react/messages?limit=100&after=42
+
+### Пример ошибки
+GET {{baseUrl}}/api/rooms/react/messages?limit=0

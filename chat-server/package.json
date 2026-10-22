@@ -1,0 +1,19 @@
+{
+  "name": "learning-chat-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Express + PostgreSQL + native WebSocket server for a React learning project",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "start": "node scripts/start-local.mjs",
+    "start:external": "node --env-file-if-exists=.env src/index.js",
+    "test": "node --test --test-concurrency=1",
+    "db:stop": "node scripts/stop-db.mjs"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.16.0",
+    "ws": "^8.18.0"
+  }
+}
