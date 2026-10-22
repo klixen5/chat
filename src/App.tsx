@@ -1,6 +1,8 @@
 import LoginForm from './components/LoginForm.tsx'
 import ChatPage from './components/ChatPage.tsx'
 
+import HttpError from './api/HttpError.tsx'
+
 import { type ChangeEvent, type SubmitEvent, useState, useEffect } from 'react'
 
 const healthUrl = 'http://127.0.0.1:3001/api/health'
@@ -17,7 +19,7 @@ export default function App() {
       try {
         const response = await fetch(healthUrl, { signal: controller.signal })
         if (response.status !== 200) {
-          throw createHttpError(response.status)
+          throw new HttpError(response.status)
         }
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -61,21 +63,6 @@ export default function App() {
   )
 
   return health ? page : <p>Ошибка сервера</p>
-}
-
-function createHttpError(status: number) {
-  return new HttpError(status)
-}
-
-class HttpError extends Error {
-  public status: number
-  public name: string
-
-  constructor(status: number) {
-    super();
-    this.name = 'HttpError'
-    this.status = status
-  }
 }
 
 
