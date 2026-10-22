@@ -1,11 +1,10 @@
 import LoginForm from './components/LoginForm.tsx'
 import ChatPage from './components/ChatPage.tsx'
 
-import HttpError from './api/HttpError.tsx'
+import fetchHealth from './api/health.ts'
 
 import { type ChangeEvent, type SubmitEvent, useState, useEffect } from 'react'
 
-const healthUrl = 'http://127.0.0.1:3001/api/health'
 
 export default function App() {
   const [name, setName] = useState('')
@@ -15,30 +14,21 @@ export default function App() {
   useEffect(() => {
     const controller = new AbortController()
 
-    async function checkServer(): Promise<void> {
-      try {
-        const response = await fetch(healthUrl, { signal: controller.signal })
-        if (response.status !== 200) {
-          throw new HttpError(response.status)
+    fetchHealth(controller.signal)
+      .catch((e: Error) => {
+        switch (e.name) {
+          case 'AbortError':
+            break
+          case 'TypeError':
+            setHealth(false)
+            break
+          case 'HttpError':
+            setHealth(false)
+            break
+          default:
+            throw e
         }
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          switch (e.name) {
-            case 'AbortError':
-              break
-            case 'TypeError':
-              setHealth(false)
-              break
-            case 'HttpError':
-              setHealth(false)
-              break
-            default:
-              throw e
-          }
-        }
-      }
-    }
-    checkServer()
+      })
 
     return () => controller.abort()
   }, []);
