@@ -1,3 +1,5 @@
+@import "./reset.css";
+
 @font-face {
   font-family: Manrope;
   src: url("./assets/fonts/Manrope-Regular.woff2");
@@ -28,4 +30,20 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+}
+
+:root {
+  --color-onAcent: #fff;
+  --color-heroMuted: #B5D5CE;
+  --color-acent: #087F75;
+  --color-text: #193432;
+  --color-muted: #647975;
+  --color-border: #DEE7E5;
+  --color-focus: #56B9AB;
+}
+
+body {
+  font-family: Manrope, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }
