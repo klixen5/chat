@@ -1,3 +1,9 @@
+import { type IdentityRequest, type JoinRoomRequest, type LeaveRoomRequest, type SendMessageRequest } from "./websocketTypes.ts";
+
+
+type Send = IdentityRequest | JoinRoomRequest | LeaveRoomRequest | SendMessageRequest
+
+
 export default class ClientChat {
   private websocket: WebSocket
 
@@ -23,6 +29,11 @@ export default class ClientChat {
   onClose(callback: (event: CloseEvent) => void): () => void {
     this.websocket.addEventListener('close', callback)
     return () => this.websocket.removeEventListener('close', callback)
+  }
+
+  sendMessage(data: Send): void {
+    const json = JSON.stringify(data)
+    this.websocket.send(json)
   }
 
   destroy(): void {
