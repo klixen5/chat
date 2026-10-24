@@ -6,7 +6,7 @@ export type RoomsResponse = {
 }
 
 
-export default async function rooms(signal: AbortSignal): Promise<RoomsResponse> {
+export default async function getRooms(signal: AbortSignal): Promise<RoomsResponse> {
   const url = new URL('/api/rooms', restUrl)
   const response = await fetch(url, { signal })
 
