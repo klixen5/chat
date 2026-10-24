@@ -1,0 +1,31 @@
+export default class ClientChat {
+  private websocket: WebSocket
+
+  constructor(websocket: WebSocket) {
+    this.websocket = websocket
+  }
+
+  onOpen(callback: (event: Event) => void): () => void {
+    this.websocket.addEventListener('open', callback)
+    return () => this.websocket.removeEventListener('open', callback)
+  }
+
+  onMessage(callback: (event: MessageEvent<unknown>) => void): () => void {
+    this.websocket.addEventListener('message', callback)
+    return () => this.websocket.removeEventListener('message', callback)
+  }
+
+  onError(callback: (event: Event) => void): () => void {
+    this.websocket.addEventListener('error', callback)
+    return () => this.websocket.removeEventListener('error', callback)
+  }
+
+  onClose(callback: (event: CloseEvent) => void): () => void {
+    this.websocket.addEventListener('close', callback)
+    return () => this.websocket.removeEventListener('close', callback)
+  }
+
+  destroy(): void {
+    this.websocket.close()
+  }
+}
