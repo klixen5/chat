@@ -1,12 +1,8 @@
 type RoomItemProps = {
-
+  name: string
 }
 
-export default function RoomItem() {
+export default function RoomItem({ name }: RoomItemProps) {
 
-  return (
-    <div>
-
-    </div>
-  )
+  return <button>{name}</button>
 }
