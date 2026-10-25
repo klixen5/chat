@@ -1,5 +1,6 @@
 import RoomList from './RoomList.tsx'
 import ChatRoom from './ChatRoom.tsx'
+import ChatLayout from './ChatLayout.tsx'
 import {useCallback, useEffect, useReducer, useRef} from 'react'
 import ClientChat from '../api/ClientChat.ts'
 import {socket} from '../api/config.ts'
@@ -100,8 +101,10 @@ export default function ChatPage({ name }: ChatPageProps) {
 
   return (
     <div>
-      <RoomList roomId={state.room !== null ? state.room.id : null} updateRoom={handleUpdateRoom} />
-      <ChatRoom />
+      <ChatLayout name={name}>
+        <RoomList roomId={state.room !== null ? state.room.id : null} updateRoom={handleUpdateRoom} />
+        <ChatRoom />
+      </ChatLayout>
     </div>
   )
 }
