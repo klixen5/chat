@@ -8,7 +8,7 @@ type ChatLayoutProps = {
 
 export default function ChatLayout({ name, children }: ChatLayoutProps) {
   return (
-    <div>
+    <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
           <div className={styles.logoSymbol}>#</div>
@@ -17,6 +17,9 @@ export default function ChatLayout({ name, children }: ChatLayoutProps) {
         <p className={styles.slogan}>Место для хороших вопросов</p>
         <div className={styles.profileIcon}>{name[0]}</div>
       </header>
+      <main className={styles.main}>
+        {children}
+      </main>
     </div>
   )
 }

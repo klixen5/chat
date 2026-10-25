@@ -1,3 +1,9 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -47,4 +53,9 @@
   color: var(--color-onAcent);
   background-color: var(--color-hero);
   border-radius: 50%;
+}
+
+.main {
+  flex: 1 1 0;
+  display: flex;
 }
