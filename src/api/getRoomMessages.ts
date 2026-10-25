@@ -2,7 +2,7 @@ import { restUrl } from './config.ts'
 import HttpError from './HttpError.ts'
 
 
-type RoomMessagesResponse = {
+export type RoomMessagesResponse = {
   items: Array<{
     id: number
     roomId: string
