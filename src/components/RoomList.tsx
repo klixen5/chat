@@ -1,16 +1,17 @@
 import RoomItem from './RoomItem.tsx'
 import getRooms, { type RoomsResponse } from '../api/getRooms.ts'
-import { useState, useEffect, type Dispatch, type SetStateAction } from 'react'
+import { useState, useEffect } from 'react'
+import { type Room } from './ChatPage.tsx'
 
 
 type RoomListProps = {
-  selectedRoomId: string | null
-  setSelectedRoomId: Dispatch<SetStateAction<string | null>>
+  roomId: string | null
+  updateRoom: (room: Room) => () => void
 }
-type RoomsState = null | RoomsResponse
+type RoomsState = RoomsResponse | null
 
 
-export default function RoomList({ selectedRoomId, setSelectedRoomId }: RoomListProps) {
+export default function RoomList({ roomId, updateRoom }: RoomListProps) {
   const [rooms, setRooms] = useState<RoomsState>(null)
   const [health, setHealth] = useState(true)
 
@@ -19,7 +20,7 @@ export default function RoomList({ selectedRoomId, setSelectedRoomId }: RoomList
     getRooms(controller.signal)
       .then(rooms => {
         setRooms(rooms)
-        setSelectedRoomId(rooms.items[0].id)
+        updateRoom(rooms.items[0])
       })
       .catch((e: Error) => {
         switch (e.name) {
@@ -36,11 +37,7 @@ export default function RoomList({ selectedRoomId, setSelectedRoomId }: RoomList
         }
       })
     return () => controller.abort()
-  }, [setSelectedRoomId])
-
-  function handleClick(id: string): () => void {
-    return  () => setSelectedRoomId(id)
-  }
+  }, [updateRoom])
 
   const roomsElement = rooms !== null ? (
     <nav>
@@ -48,7 +45,8 @@ export default function RoomList({ selectedRoomId, setSelectedRoomId }: RoomList
         <RoomItem
           key={item.id}
           name={item.name}
-          onClick={handleClick(item.id)}
+          selected={item.id === roomId}
+          onClick={updateRoom(item)}
         />
       )}
     </nav>
