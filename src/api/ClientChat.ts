@@ -1,7 +1,4 @@
-import { type IdentityRequest, type JoinRoomRequest, type LeaveRoomRequest, type SendMessageRequest } from "./websocketTypes.ts";
-
-
-type Send = IdentityRequest | JoinRoomRequest | LeaveRoomRequest | SendMessageRequest
+import { type Req } from './websocketTypes.ts'
 
 
 export default class ClientChat {
@@ -16,7 +13,7 @@ export default class ClientChat {
     return () => this.websocket.removeEventListener('open', callback)
   }
 
-  onMessage(callback: (event: MessageEvent<unknown>) => void): () => void {
+  onMessage(callback: (event: MessageEvent<string>) => void): () => void {
     this.websocket.addEventListener('message', callback)
     return () => this.websocket.removeEventListener('message', callback)
   }
@@ -31,7 +28,7 @@ export default class ClientChat {
     return () => this.websocket.removeEventListener('close', callback)
   }
 
-  sendMessage(data: Send): void {
+  sendMessage(data: Req): void {
     const json = JSON.stringify(data)
     this.websocket.send(json)
   }
