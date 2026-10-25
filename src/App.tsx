@@ -49,7 +49,7 @@ export default function App() {
       onSubmit={handleSubmitLoginForm}
     />
   ) : (
-    <ChatPage />
+    <ChatPage name={name}/>
   )
 
   return health ? page : <p>Ошибка сервера</p>
