@@ -8,5 +8,13 @@ type RoomItemProps = {
 
 export default function RoomItem({ name, selected, onClick: handleClick }: RoomItemProps) {
 
-  return <button onClick={handleClick} className={selected ? styles.active : undefined}>{name}</button>
+  return (
+    <button
+      onClick={handleClick}
+      className={selected ? `${styles.button} ${styles.active}`: styles.button}
+    >
+      <span className={styles.icon}>#</span>
+      <span className={styles.name}>{name}</span>
+    </button>
+  )
 }
