@@ -110,6 +110,18 @@ export type ErrorResponse = {
   }
 }
 
+export type Req = IdentityRequest
+  | JoinRoomRequest
+  | LeaveRoomRequest
+  | SendMessageRequest
+export type Resp = IdentityResponse
+  | JoinRoomResponse
+  | LeaveRoomResponse
+  | SendMessageResponse
+  | ConnectionResponse
+  | CreatedMessageResponse
+  | ErrorResponse
+
 
 
 
