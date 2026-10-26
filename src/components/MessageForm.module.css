@@ -1,0 +1,38 @@
+.container {
+  margin-top: auto;
+  padding: 24px;
+}
+
+.form {
+  display: flex;
+  padding: 5px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+
+.input {
+  flex: 1 1 0;
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    font-size: 14px;
+    line-height: calc(22 / 14);
+    color: var(--color-muted);
+    opacity: 70%;
+  }
+}
+
+.button {
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border: none;
+  background-color: var(--color-acent);
+  border-radius: 12px;
+}
