@@ -1,19 +1,20 @@
 import RoomItem from './RoomItem.tsx'
-import getRooms, { type RoomsResponse } from '../api/getRooms.ts'
-import { useState, useEffect } from 'react'
-import { type Room } from './ChatPage.tsx'
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react'
+import getRooms from '../api/getRooms.ts'
+import { type Room } from '../api/dataType.ts'
 import styles from './RoomList.module.css'
 
 
 type RoomListProps = {
-  roomId: string | null
-  updateRoom: (room: Room) => () => void
   name: string
+  currentRoom: Room | null
+  setCurrentRoom: Dispatch<SetStateAction<Room | null>>
 }
-type RoomsState = RoomsResponse | null
+
+type RoomsState = Room[] | null
 
 
-export default function RoomList({ roomId, updateRoom, name }: RoomListProps) {
+export default function RoomList({ name, currentRoom, setCurrentRoom }: RoomListProps) {
   const [rooms, setRooms] = useState<RoomsState>(null)
   const [health, setHealth] = useState(true)
 
@@ -21,8 +22,7 @@ export default function RoomList({ roomId, updateRoom, name }: RoomListProps) {
     const controller = new AbortController()
     getRooms(controller.signal)
       .then(rooms => {
-        setRooms(rooms)
-        updateRoom(rooms.items[0])
+        setRooms(rooms.items)
       })
       .catch((e: Error) => {
         switch (e.name) {
@@ -39,7 +39,11 @@ export default function RoomList({ roomId, updateRoom, name }: RoomListProps) {
         }
       })
     return () => controller.abort()
-  }, [updateRoom])
+  }, [])
+
+  function handleClick(room: Room): () => void {
+    return () => setCurrentRoom(room)
+  }
 
   if (!health) {
     return <p>Ошибка сервера</p>
@@ -53,12 +57,12 @@ export default function RoomList({ roomId, updateRoom, name }: RoomListProps) {
     <div className={styles.container}>
       <h1 className={styles.title}>Комнаты</h1>
       <nav className={styles.buttonMenu}>
-        {rooms.items.map(item =>
+        {rooms.map(item =>
           <RoomItem
             key={item.id}
             name={item.name}
-            selected={item.id === roomId}
-            onClick={updateRoom(item)}
+            selected={item.id === currentRoom?.id}
+            onClick={handleClick(item)}
           />
         )}
       </nav>

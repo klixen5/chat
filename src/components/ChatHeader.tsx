@@ -1,4 +1,4 @@
-import { type Status } from './ChatPage.tsx'
+import { type Status } from './ChatRoom.tsx'
 import styles from './ChatHeader.module.css'
 
 type ChatHeaderProps = {
