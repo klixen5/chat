@@ -40,6 +40,11 @@
   --color-muted: #647975;
   --color-border: #DEE7E5;
   --color-focus: #56B9AB;
+  --color-hero: #103E39;
+  --color-acentSoft: #E4F3EE;
+  --color-sideBar: #FAFCFC;
+  --color-danger: #AC3F3F;
+  --color-dangerSoft: #FFF1EF;
 }
 
 body {
