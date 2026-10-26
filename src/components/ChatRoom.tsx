@@ -26,4 +26,4 @@ export default function ChatRoom({ name, currentRoom }: ChatRoomProps) {
 }
 
 
-export type Status = 'connecting' | 'identifying' | 'ready' | 'error' | 'disconnected'
+export type Status = 'connecting' | 'identifying' | 'joining' | 'joined' | 'error' | 'disconnected'
