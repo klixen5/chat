@@ -2,7 +2,7 @@ import RoomList from './RoomList.tsx'
 import ChatRoom from './ChatRoom.tsx'
 import ChatLayout from './ChatLayout.tsx'
 import { useState } from 'react'
-import { type Room } from '../api/dataType.ts'
+import { type Room } from '../api/types.ts'
 
 
 type ChatPageProps = {
