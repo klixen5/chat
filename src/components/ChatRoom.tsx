@@ -27,7 +27,12 @@ export default function ChatRoom({ name, currentRoom }: ChatRoomProps) {
 
   return (
     <div className={styles.container}>
-      <ChatHeader name={currentRoom.name} description={currentRoom.description} status={'disconnected'} />
+      <ChatHeader
+        name={currentRoom.name} description={currentRoom.description}
+        connectionStatus={connectionStatus}
+        roomStatus={roomStatus}
+        historyStatus={historyStatus}
+      />
       <MessageList messages={confirmObjects.messages} />
       <MessageForm sendMessage={sendMessage} />
     </div>
