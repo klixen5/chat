@@ -1,15 +1,11 @@
-import { type ConnectionStatus, type RoomStatus, type HistoryStatus } from '../hooks/useChat.ts'
 import styles from './ChatHeader.module.css'
 
 type ChatHeaderProps = {
-  connectionStatus: ConnectionStatus
-  roomStatus: RoomStatus
-  historyStatus: HistoryStatus
   name: string
   description: string
 }
 
-export default function ChatHeader({ connectionStatus, roomStatus, historyStatus , name, description }: ChatHeaderProps) {
+export default function ChatHeader({ name, description }: ChatHeaderProps) {
   return (
     <div className={styles.container}>
       <div>
@@ -19,7 +15,7 @@ export default function ChatHeader({ connectionStatus, roomStatus, historyStatus
         </h1>
         <p className={styles.description}>{description}</p>
       </div>
-      {connectionStatus === 'ready' && roomStatus === 'join' && historyStatus === 'ready' ? (
+      {false || true ? (
         <div className={`${styles.statusEl} ${styles.connectedStatus}`}>Подключено</div>
       ) : (
         <div className={`${styles.statusEl} ${styles.disconnectedStatus}`}>Не подключено</div>
