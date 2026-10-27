@@ -137,9 +137,9 @@ function confirmReducer(state: ConfirmState, action: ConfirmAction): ConfirmStat
 }
 
 
-type ConnectionStatus = 'connecting' | 'identifying' | 'ready' | 'disconnected' | 'error'
-type RoomStatus = 'idle' | 'joining' | 'join' | 'error'
-type HistoryStatus = 'idle' | 'loading' | 'ready' | 'error'
+export type ConnectionStatus = 'connecting' | 'identifying' | 'ready' | 'disconnected' | 'error'
+export type RoomStatus = 'idle' | 'joining' | 'join' | 'error'
+export type HistoryStatus = 'idle' | 'loading' | 'ready' | 'error'
 
 
 
