@@ -1,13 +1,13 @@
-import { type ChangeEvent, type SubmitEvent, useId } from 'react'
+import { type SubmitEvent, useId, useState } from 'react'
 import styles from './LoginForm.module.css'
 
 type LoginFormProps = {
-  name: string
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
   onSubmit: (e: SubmitEvent<HTMLFormElement>) => void
 }
 
-export default function LoginForm({ name, onChange: handleChange, onSubmit: handleSubmit }: LoginFormProps) {
+export default function LoginForm({ onSubmit: handleSubmit }: LoginFormProps) {
+  const [name, setName] = useState('')
+
   const nameId = useId()
   const formId = useId()
 
@@ -43,7 +43,7 @@ export default function LoginForm({ name, onChange: handleChange, onSubmit: hand
             className={styles.formInput}
             name="username"
             value={name}
-            onChange={handleChange}
+            onChange={e => setName(e.target.value)}
           />
           <p className={styles.formValid}>От 2 до 30 символов. Можно использовать ник.</p>
         </form>

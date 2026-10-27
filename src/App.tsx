@@ -1,58 +1,49 @@
 import LoginForm from './components/LoginForm.tsx'
 import ChatPage from './components/ChatPage.tsx'
+import { fetchHealth } from './api/restApi.ts'
+import { type SubmitEvent, useState, useEffect } from 'react'
 
-import fetchHealth from './api/health.ts'
 
-import { type ChangeEvent, type SubmitEvent, useState, useEffect } from 'react'
+type CheckServerStatusState = 'idle' | 'pending' | 'fulfilled' | 'rejected'
 
 
 export default function App() {
-  const [name, setName] = useState('')
-  const [isComeIn, setIsComeIn] = useState(false)
-  const [health, setHealth] = useState(true)
+  const [name, setName] = useState<string | null>(null)
+  const [checkServerStatus, setCheckServerStatus] = useState<CheckServerStatusState>('idle')
 
   useEffect(() => {
     const controller = new AbortController()
+    setCheckServerStatus('pending')
 
     fetchHealth(controller.signal)
-      .catch((e: Error) => {
-        switch (e.name) {
-          case 'AbortError':
-            break
-          case 'TypeError':
-            setHealth(false)
-            break
-          case 'HttpError':
-            setHealth(false)
-            break
-          default:
-            throw e
+      .then(_ => setCheckServerStatus('fulfilled'))
+      .catch((e: unknown) => {
+        if (e instanceof Error && e.name === 'AbortError') {
+          return
         }
+        console.error(e)
+        setCheckServerStatus('rejected')
       })
 
     return () => controller.abort()
   }, []);
 
-  function handleChangeLoginForm(e: ChangeEvent<HTMLInputElement>) {
-    setName(e.target.value)
-  }
-
-  async function handleSubmitLoginForm(e: SubmitEvent<HTMLFormElement>) {
+  function handleSubmitLoginForm(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
-    setIsComeIn(true)
+    const form = e.currentTarget
+    const name = new FormData(form).get('username') as string
+    setName(name)
   }
 
-  const page = !isComeIn ? (
-    <LoginForm
-      name={name}
-      onChange={handleChangeLoginForm}
-      onSubmit={handleSubmitLoginForm}
-    />
-  ) : (
-    <ChatPage name={name}/>
-  )
+  if (checkServerStatus === 'idle' || checkServerStatus === 'pending') {
+    return <p>Загрузка</p>
+  }
 
-  return health ? page : <p>Ошибка сервера</p>
+  if (checkServerStatus === 'rejected') {
+    return <p>Сервер недоступен</p>
+  }
+
+  return name === null ? <LoginForm onSubmit={handleSubmitLoginForm} /> : <ChatPage name={name} />
 }
 
 
