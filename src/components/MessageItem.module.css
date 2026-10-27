@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-inline: 32px;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  line-height: calc(18 / 12);
+  color: var(--color-muted);
+}
+
+.message {
+  width: fit-content;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  background-color: #fff;
+  border-radius: 16px;
+}
