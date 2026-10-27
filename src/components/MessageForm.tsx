@@ -16,6 +16,7 @@ export default function MessageForm({ sendMessage }: MessageFromProps) {
     if (text.trim() === '') {
       return
     }
+    form.reset()
     sendMessage(text)
   }
 
