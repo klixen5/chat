@@ -1,8 +1,7 @@
 import RoomList from './RoomList.tsx'
 import ChatRoom from './ChatRoom.tsx'
 import ChatLayout from './ChatLayout.tsx'
-import { useState } from 'react'
-import { type Room } from '../api/types.ts'
+import { useChat } from '../hooks/useChat.ts'
 
 
 type ChatPageProps = {
@@ -10,13 +9,22 @@ type ChatPageProps = {
 }
 
 export default function ChatPage({ name }: ChatPageProps) {
-  const [currentRoom, setCurrentRoom] = useState<Room | null>(null)
+  const [currentRoom, setCurrentRoom, connection, sendMessage] = useChat(name)
 
   return (
     <div>
       <ChatLayout name={name}>
-        <RoomList name={name} currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} />
-        <ChatRoom name={name} currentRoom={currentRoom} />
+        <RoomList
+          name={name}
+          currentRoom={currentRoom}
+          setCurrentRoom={setCurrentRoom}
+        />
+        <ChatRoom
+          name={name}
+          currentRoom={currentRoom}
+          historyInfo={connection.historyInfo}
+          sendMessage={sendMessage}
+        />
       </ChatLayout>
     </div>
   )
