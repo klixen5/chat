@@ -86,6 +86,26 @@ type RoomStatus = 'idle' | 'joining' | 'joined' | 'error'
 type HistoryStatus  = 'idle' | 'loading' | 'ready' | 'error'
 
 
+const initConnectionState: State = {
+  connectionInfo: {
+    status: 'connecting',
+    error: null
+  },
+  roomInfo: {
+    status: 'idle',
+    confirmedRoom: null,
+    error: null
+  },
+  historyInfo: {
+    roomId: null,
+    status: 'idle',
+    messages: [],
+    error: null
+  }
+}
+
+
 export {
   reducer,
+  initConnectionState
 }
