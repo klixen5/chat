@@ -107,5 +107,6 @@ const initConnectionState: State = {
 
 export {
   reducer,
-  initConnectionState
+  initConnectionState,
+  type HistoryStatus
 }

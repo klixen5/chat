@@ -1,7 +1,7 @@
 import { useState, useRef, useReducer, useEffect, useEffectEvent } from 'react'
 import { restUrl } from '../api/config.ts'
 import { fetchRoomMessages } from '../api/restApi.ts'
-import { type Room, type Message, type Resp, type IdentityRequest } from '../api/types.ts'
+import { type Room, type Message, type Resp, type IdentityRequest, type JoinRoomRequest } from '../api/types.ts'
 import { reducer, initConnectionState } from './chatReducer.ts'
 
 
@@ -13,6 +13,7 @@ export function useChat(name: string) {
   const [connection, dispatch] = useReducer(reducer, initConnectionState)
   const websocket = useRef<WebSocket | null>(null)
   const requestTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>())
+  const pendingJoinId = useRef<string | null>(null)
   const historyController = useRef(new AbortController())
   const onHistoryLoaded = useEffectEvent((roomId: string, messages: Message[]) => {
     if (roomId !== connection.roomInfo.confirmedRoom?.id) {
@@ -71,14 +72,21 @@ export function useChat(name: string) {
           clearTimeout(timerId)
           requestTimers.current.delete(data.requestId)
 
-          dispatch({type: 'sessionConfirmed'})
+          dispatch({ type: 'sessionConfirmed' })
           break
         }
         case 'room:joined':
+          if (data.requestId !== pendingJoinId.current) {
+            break
+          }
+
+          const timerId = requestTimers.current.get(data.requestId)
+          clearTimeout(timerId)
+          requestTimers.current.delete(data.requestId)
+
           dispatch({ type: 'roomJoinConfirmed', room: data.data.room })
           dispatch({ type: 'historyLoadStarted' })
 
-          historyController.current.abort()
           const controller = new AbortController()
           historyController.current = controller
 
@@ -122,7 +130,55 @@ export function useChat(name: string) {
   }, [name])
 
 
-  return [currentRoom, setCurrentRoom, connection] as const
+  useEffect(() => {
+    if (currentRoom === null) return
+    if (connection.connectionInfo.status !== 'ready') return
+
+    const ws = websocket.current
+    if (ws === null || ws.readyState !== WebSocket.OPEN) return
+
+
+    const requestId = crypto.randomUUID()
+    const req: JoinRoomRequest = {
+      type: 'room:join',
+      requestId,
+      data: {
+        roomId: currentRoom.id
+      }
+    }
+
+    const timerId = setTimeout(function again(): void {
+      requestTimers.current.delete(requestId)
+
+      if (requestId !== pendingJoinId.current) return
+
+      pendingJoinId.current = null
+      dispatch({
+        type: 'roomJoinFailed',
+        error: 'Сервер не подтвердил вход в комнату вовремя'
+      })
+    }, 10_000)
+
+    historyController.current.abort()
+    pendingJoinId.current = requestId
+    requestTimers.current.set(requestId, timerId)
+
+    dispatch({ type: 'roomJoinStarted' })
+    ws.send(JSON.stringify(req))
+
+    return () => {
+      clearTimeout(timerId)
+      requestTimers.current.delete(requestId)
+    }
+  }, [currentRoom?.id, connection.connectionInfo.status])
+
+
+  function sendMessage(text: string): void {
+
+  }
+
+
+  return [currentRoom, setCurrentRoom, connection, sendMessage] as const
 }
 
 
