@@ -8,17 +8,13 @@ import styles from './ChatRoom.module.css'
 type ChatRoomProps = {
   name: string
   currentRoom: Room | null
+  sendMessage: (text: string) => void
 }
 
 
-export default function ChatRoom({ name, currentRoom }: ChatRoomProps) {
-
+export default function ChatRoom({ currentRoom, sendMessage }: ChatRoomProps) {
   if (currentRoom === null) {
     return <h1>Выберите комнату</h1>
-  }
-
-  function sendMessage(text: string): void {
-
   }
 
   return (
