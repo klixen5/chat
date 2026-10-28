@@ -4,4 +4,6 @@
   flex-direction: column;
   gap: 20px;
   background-color: var(--color-canvas);
+  min-height: auto;
+  overflow: auto;
 }

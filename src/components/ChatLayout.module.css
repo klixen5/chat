@@ -58,4 +58,5 @@
 .main {
   flex: 1 1 0;
   display: flex;
+  min-height: 0;
 }
