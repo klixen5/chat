@@ -24,8 +24,7 @@ export default function MessageForm({ currentRoom, roomInfo, sendMessage }: Mess
       return
     }
 
-    const form = e.currentTarget
-    form.reset()
+    setText('')
     sendMessage(text)
   }
 
