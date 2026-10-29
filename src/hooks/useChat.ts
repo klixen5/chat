@@ -1,7 +1,7 @@
 import { useState, useRef, useReducer, useEffect, useEffectEvent } from 'react'
 import { restUrl } from '../api/config.ts'
 import { fetchRoomMessages } from '../api/restApi.ts'
-import { type Room, type Message, type Resp, type IdentityRequest, type JoinRoomRequest } from '../api/types.ts'
+import { type Room, type Message, type Resp, type IdentityRequest, type JoinRoomRequest, type SendMessageRequest } from '../api/types.ts'
 import { reducer, initConnectionState } from './chatReducer.ts'
 
 
@@ -25,6 +25,11 @@ export function useChat(name: string) {
       roomId: roomId,
       messages: messages
     })
+  })
+  const updateHistory = useEffectEvent((message: Message) => {
+    if (message.roomId !== currentRoom?.id) return
+    const newMessages: Message[] = [...connection.historyInfo.messages, message]
+    dispatch({ type: 'historyLoadCompleted', messages: newMessages, roomId: currentRoom.id }) // будет другое действие потом, с currentRoom спорный момент
   })
 
 
@@ -101,6 +106,9 @@ export function useChat(name: string) {
             })
 
           break
+        case 'message:created':
+          updateHistory(data.data.message)
+          // если история сообщений не загрузилась, то надо это сообщение куда-то вынести, на потом...
       }
     }
 
@@ -174,7 +182,30 @@ export function useChat(name: string) {
 
 
   function sendMessage(text: string): void {
+    if (connection.roomInfo.confirmedRoom === null) return
+    const ws = websocket.current
+    if (ws === null || ws.readyState !== WebSocket.OPEN) return
 
+    const requestId = crypto.randomUUID()
+    const clientMessageId = crypto.randomUUID()
+    const req: SendMessageRequest = {
+      type: 'message:send',
+      requestId,
+      data: {
+        roomId: connection.roomInfo.confirmedRoom.id,
+        clientMessageId,
+        text
+      }
+    }
+
+    const timerId = setTimeout(() => {
+      requestTimers.current.delete(requestId)
+      // меняем состояние
+    }, 10_000)
+
+    requestTimers.current.set(requestId, timerId)
+    // меняем состояние
+    ws.send(JSON.stringify(req))
   }
 
 
