@@ -12,9 +12,15 @@ type ChatPageProps = {
 export default function ChatPage({ name }: ChatPageProps) {
   const [currentRoom, setCurrentRoom, connection, sendMessage] = useChat(name)
 
-
-  if (connection.connectionInfo.status !== 'ready') {
-    return <p className={styles.download}>Загрузка...</p>
+  switch (connection.connectionInfo.status) {
+    case 'connecting':
+      return <p className={styles.download}>Соединение...</p>
+    case 'identifying':
+      return <p className={styles.download}>Запуск сессии...</p>
+    case 'error':
+      return <p className={styles.download}>{connection.connectionInfo.error}</p>
+    case 'disconnected':
+      return <p className={styles.download}>Соединение разорвано</p>
   }
 
   return (
