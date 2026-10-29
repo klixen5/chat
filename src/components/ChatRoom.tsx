@@ -25,7 +25,7 @@ type ChatRoomProps = {
 export default function ChatRoom({ currentRoom, roomInfo, historyInfo, sendMessage }: ChatRoomProps) {
 
   if (currentRoom === null) {
-    return <h1>Выберите комнату</h1>
+    return <h1 className={styles.selectRoom}>Выберите комнату</h1>
   }
 
   return (

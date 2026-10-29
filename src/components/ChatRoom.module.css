@@ -3,3 +3,11 @@
   display: flex;
   flex-direction: column;
 }
+
+.selectRoom {
+  composes: container;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  color: var(--color-muted);
+}
