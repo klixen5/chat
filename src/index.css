@@ -46,6 +46,8 @@
   --color-danger: #AC3F3F;
   --color-dangerSoft: #FFF1EF;
   --color-canvas: #F4F7F7;
+  --color-pending: #854D0E;
+  --color-pendingSoft: #FEF3C7;
 }
 
 body {

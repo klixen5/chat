@@ -108,5 +108,6 @@ const initConnectionState: State = {
 export {
   reducer,
   initConnectionState,
+  type RoomStatus,
   type HistoryStatus
 }
