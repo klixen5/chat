@@ -10,6 +10,7 @@ type CheckServerStatusState = 'idle' | 'pending' | 'fulfilled' | 'rejected'
 
 export default function App() {
   const [name, setName] = useState<string | null>(null)
+  const [valid, setValid] = useState(true)
   const [checkServerStatus, setCheckServerStatus] = useState<CheckServerStatusState>('idle')
 
   useEffect(() => {
@@ -32,8 +33,13 @@ export default function App() {
   function handleSubmitLoginForm(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const form = e.currentTarget
-    const name = new FormData(form).get('username') as string
-    setName(name)
+    const name = (new FormData(form).get('username') as string).trim()
+
+    if (isValid(name)) {
+      setName(name)
+    } else {
+      setValid(false)
+    }
   }
 
   if (checkServerStatus === 'idle' || checkServerStatus === 'pending') {
@@ -44,7 +50,15 @@ export default function App() {
     return <p className={styles.error}>Сервер недоступен</p>
   }
 
-  return name === null ? <LoginForm onSubmit={handleSubmitLoginForm} /> : <ChatPage name={name} />
+  return name === null
+    ? <LoginForm showError={!valid} onSubmit={handleSubmitLoginForm} setValid={setValid} />
+    : <ChatPage name={name} />
+}
+
+
+function isValid(text: string): boolean {
+  const clearText = text.trim()
+  return clearText.length >= 2 && clearText.length <= 30
 }
 
 
