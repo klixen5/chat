@@ -32,7 +32,11 @@ export default function ChatRoom({ currentRoom, roomInfo, historyInfo, sendMessa
     <div className={styles.container}>
       <ChatHeader currentRoom={currentRoom} roomInfo={roomInfo} />
       <MessageList messages={historyInfo.messages}/>
-      <MessageForm sendMessage={sendMessage} />
+      <MessageForm
+        currentRoom={currentRoom}
+        roomInfo={roomInfo}
+        sendMessage={sendMessage}
+      />
     </div>
   )
 }
