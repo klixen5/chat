@@ -17,6 +17,11 @@ type State = {
     messages: Message[]
     error: string | null
   }
+  sendInfo: {
+    status: SendStatus
+    message: Message | null
+    error: string | null
+  }
 }
 
 type Action = {
@@ -41,6 +46,17 @@ type Action = {
 } | {
   type: 'historyLoadFailed'
   error: string
+} | {
+  type: 'messageSendStarted'
+} | {
+  type: 'messageConfirmed'
+  message: Message
+} | {
+  type: 'messageFailed'
+  error: string
+} | {
+  type: 'updateHistory'
+  message: Message
 }
 
 function reducer(state: State, action: Action): State {
@@ -63,20 +79,53 @@ function reducer(state: State, action: Action): State {
         historyInfo: {
           ...state.historyInfo,
           status: state.historyInfo.status === 'loading' ? 'idle' : state.historyInfo.status
+        },
+        sendInfo: {
+          status: 'idle',
+          message: null,
+          error: null
         }
       }
     case 'roomJoinStarted':
-      return { ...state, roomInfo: { ...state.roomInfo, status: 'joining', error: null } }
+      return { ...state, roomInfo: { status: 'joining', confirmedRoom: null, error: null } }
     case 'roomJoinConfirmed':
       return { ...state, roomInfo: { status: 'joined', confirmedRoom: action.room, error: null } }
     case 'roomJoinFailed':
       return { ...state, roomInfo: { ...state.roomInfo, status: 'error', error: action.error } }
     case 'historyLoadStarted':
-      return { ...state, historyInfo: { ...state.historyInfo, status: 'loading', error: null } }
-    case 'historyLoadCompleted':
-      return { ...state, historyInfo: { status: 'ready', messages: action.messages, roomId: action.roomId, error: null } }
+      return { ...state, historyInfo: { status: 'loading', messages: [], roomId: null, error: null } }
+    case 'historyLoadCompleted': {
+      const uniqueMessages = new Map<number, Message>
+      for (const mes of [...state.historyInfo.messages, ...action.messages]) {
+        uniqueMessages.set(mes.id, mes)
+      }
+      const sortMessages = [...uniqueMessages.values()].sort((m1, m2) => m1.id - m2.id)
+      return {...state, historyInfo: {status: 'ready', messages: sortMessages, roomId: action.roomId, error: null } }
+    }
     case 'historyLoadFailed':
       return { ...state, historyInfo: { ...state.historyInfo, status: 'error', error: action.error } }
+    case 'messageSendStarted':
+      return { ...state, sendInfo: { status: 'sending', message: null, error: null } }
+    case 'messageConfirmed':
+      return { ...state, sendInfo: { ...state.sendInfo, status: 'confirmed', message: action.message } }
+    case 'messageFailed':
+      return { ...state, sendInfo: { ...state.sendInfo, status: 'error', error: action.error } }
+    case 'updateHistory': {
+      const uniqueMessages = new Map<number, Message>
+      for (const mes of [...state.historyInfo.messages, action.message]) {
+        uniqueMessages.set(mes.id, mes)
+      }
+      const sortMessages = [...uniqueMessages.values()].sort((m1, m2) => m1.id - m2.id)
+      return {
+        ...state,
+        historyInfo: {...state.historyInfo, messages: sortMessages},
+        sendInfo: {
+          status: 'idle',
+          message: null,
+          error: null
+        }
+      }
+    }
   }
 }
 
@@ -84,6 +133,7 @@ function reducer(state: State, action: Action): State {
 type ConnectionStatus = 'connecting' | 'identifying' | 'ready' | 'disconnected' | 'error'
 type RoomStatus = 'idle' | 'joining' | 'joined' | 'error'
 type HistoryStatus  = 'idle' | 'loading' | 'ready' | 'error'
+type SendStatus = 'idle' | 'sending' | 'confirmed' | 'error'
 
 
 const initConnectionState: State = {
@@ -100,6 +150,11 @@ const initConnectionState: State = {
     roomId: null,
     status: 'idle',
     messages: [],
+    error: null
+  },
+  sendInfo: {
+    status: 'idle',
+    message: null,
     error: null
   }
 }

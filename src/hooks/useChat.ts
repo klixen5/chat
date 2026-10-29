@@ -28,8 +28,7 @@ export function useChat(name: string) {
   })
   const updateHistory = useEffectEvent((message: Message) => {
     if (message.roomId !== currentRoom?.id) return
-    const newMessages: Message[] = [...connection.historyInfo.messages, message]
-    dispatch({ type: 'historyLoadCompleted', messages: newMessages, roomId: currentRoom.id }) // будет другое действие потом, с currentRoom спорный момент
+    dispatch({ type: 'updateHistory', message })
   })
 
 
@@ -108,7 +107,13 @@ export function useChat(name: string) {
           break
         case 'message:created':
           updateHistory(data.data.message)
-          // если история сообщений не загрузилась, то надо это сообщение куда-то вынести, на потом...
+          break
+        case 'message:ack':
+          clearTimeout(requestTimers.current.get(data.requestId))
+          requestTimers.current.delete(data.requestId)
+          break
+        case 'error':
+          break
       }
     }
 
@@ -200,11 +205,18 @@ export function useChat(name: string) {
 
     const timerId = setTimeout(() => {
       requestTimers.current.delete(requestId)
-      // меняем состояние
+
+      if (req.data.roomId !== currentRoom?.id) return
+
+      dispatch({
+        type: 'messageFailed',
+        error: 'Сервер не подтвердил отправку сообщения'
+      })
     }, 10_000)
 
     requestTimers.current.set(requestId, timerId)
-    // меняем состояние
+
+    dispatch({ type: 'messageSendStarted' })
     ws.send(JSON.stringify(req))
   }
 
