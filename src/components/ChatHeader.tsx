@@ -23,7 +23,7 @@ export default function ChatHeader({ currentRoom, roomInfo }: ChatHeaderProps) {
       </div>
       {
         roomInfo.status === 'error'
-        ? <div className={`${styles.statusEl} ${styles.disconnectedStatus}`}>Не удалось подключиться</div>
+        ? <div className={`${styles.statusEl} ${styles.disconnectedStatus}`}>{roomInfo.error}</div>
         : roomInfo.status === 'joined' && roomInfo.confirmedRoom?.id === currentRoom.id
         ? <div className={`${styles.statusEl} ${styles.connectedStatus}`}>Подключено</div>
         : <div className={`${styles.statusEl} ${styles.pendingStatus}`}>Подключение</div>
