@@ -2,6 +2,7 @@ import LoginForm from './components/LoginForm.tsx'
 import ChatPage from './components/ChatPage.tsx'
 import { fetchHealth } from './api/restApi.ts'
 import { type SubmitEvent, useState, useEffect } from 'react'
+import styles from './App.module.css'
 
 
 type CheckServerStatusState = 'idle' | 'pending' | 'fulfilled' | 'rejected'
@@ -36,11 +37,11 @@ export default function App() {
   }
 
   if (checkServerStatus === 'idle' || checkServerStatus === 'pending') {
-    return <p>Загрузка</p>
+    return <p className={styles.download}>Загрузка...</p>
   }
 
   if (checkServerStatus === 'rejected') {
-    return <p>Сервер недоступен</p>
+    return <p className={styles.error}>Сервер недоступен</p>
   }
 
   return name === null ? <LoginForm onSubmit={handleSubmitLoginForm} /> : <ChatPage name={name} />

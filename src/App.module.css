@@ -1,0 +1,13 @@
+.download {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
+  font-size: 48px;
+  color: var(--color-muted);
+}
+
+.error {
+  composes: download;
+  color: var(--color-danger);
+}
