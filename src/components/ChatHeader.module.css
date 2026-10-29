@@ -38,3 +38,8 @@
   color: var(--color-danger);
   background-color: var(--color-dangerSoft);
 }
+
+.pendingStatus {
+  color: var(--color-pending);
+  background-color: var(--color-pendingSoft);
+}

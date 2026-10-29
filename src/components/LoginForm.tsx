@@ -1,13 +1,15 @@
-import { type ChangeEvent, type SubmitEvent, useId } from 'react'
+import { type SubmitEvent, useId, useState, type Dispatch, type SetStateAction } from 'react'
 import styles from './LoginForm.module.css'
 
 type LoginFormProps = {
-  name: string
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  showError: boolean
   onSubmit: (e: SubmitEvent<HTMLFormElement>) => void
+  setValid: Dispatch<SetStateAction<boolean>>
 }
 
-export default function LoginForm({ name, onChange: handleChange, onSubmit: handleSubmit }: LoginFormProps) {
+export default function LoginForm({ showError, onSubmit: handleSubmit, setValid }: LoginFormProps) {
+  const [name, setName] = useState('')
+
   const nameId = useId()
   const formId = useId()
 
@@ -43,9 +45,18 @@ export default function LoginForm({ name, onChange: handleChange, onSubmit: hand
             className={styles.formInput}
             name="username"
             value={name}
-            onChange={handleChange}
+            onChange={e => {
+              setName(e.target.value)
+              if (showError) {
+                setValid(true)
+              }
+            }}
           />
-          <p className={styles.formValid}>От 2 до 30 символов. Можно использовать ник.</p>
+          {showError
+            ? <p className={styles.formNoValid}>Имя должно содержать от 2 до 30 символов</p>
+            : <p className={styles.formValid}>От 2 до 30 символов. Можно использовать ник.</p>
+          }
+
         </form>
         <button form={formId} type="submit" className={styles.formSubmit} >Войти в чат</button>
         <p className={styles.formDescription}>Без пароля и регистрации. История комнат общая для всех.</p>

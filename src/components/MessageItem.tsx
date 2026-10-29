@@ -1,4 +1,4 @@
-import { type Message } from '../api/dataType.ts'
+import { type Message } from '../api/types.ts'
 import styles from './MessageItem.module.css'
 
 

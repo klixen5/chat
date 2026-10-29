@@ -143,6 +143,11 @@
   color: var(--color-muted);
 }
 
+.formNoValid {
+  composes: formValid;
+  color: var(--color-danger);
+}
+
 .formSubmit {
   padding: 17px 160px;
   border: none;

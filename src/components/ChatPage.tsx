@@ -1,8 +1,8 @@
 import RoomList from './RoomList.tsx'
 import ChatRoom from './ChatRoom.tsx'
 import ChatLayout from './ChatLayout.tsx'
-import { useState } from 'react'
-import { type Room } from '../api/dataType.ts'
+import { useChat } from '../hooks/useChat.ts'
+import styles from './ChatPage.module.css'
 
 
 type ChatPageProps = {
@@ -10,13 +10,33 @@ type ChatPageProps = {
 }
 
 export default function ChatPage({ name }: ChatPageProps) {
-  const [currentRoom, setCurrentRoom] = useState<Room | null>(null)
+  const [currentRoom, setCurrentRoom, connection, sendMessage] = useChat(name)
+
+  switch (connection.connectionInfo.status) {
+    case 'connecting':
+      return <p className={styles.download}>Соединение...</p>
+    case 'identifying':
+      return <p className={styles.download}>Запуск сессии...</p>
+    case 'error':
+      return <p className={styles.download}>{connection.connectionInfo.error}</p>
+    case 'disconnected':
+      return <p className={styles.download}>Соединение разорвано</p>
+  }
 
   return (
     <div>
       <ChatLayout name={name}>
-        <RoomList name={name} currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} />
-        <ChatRoom name={name} currentRoom={currentRoom} />
+        <RoomList
+          name={name}
+          currentRoom={currentRoom}
+          setCurrentRoom={setCurrentRoom}
+        />
+        <ChatRoom
+          currentRoom={currentRoom}
+          roomInfo={connection.roomInfo}
+          historyInfo={connection.historyInfo}
+          sendMessage={sendMessage}
+        />
       </ChatLayout>
     </div>
   )

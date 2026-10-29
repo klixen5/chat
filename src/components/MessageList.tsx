@@ -1,5 +1,5 @@
 import MessageItem from './MessageItem.tsx'
-import { type Message } from '../api/dataType.ts'
+import { type Message } from '../api/types.ts'
 import styles from './MessageList.module.css'
 
 type MessageListProps = {

@@ -1,10 +1,12 @@
 import styles from './RoomItem.module.css'
 
+
 type RoomItemProps = {
   name: string
   selected: boolean
   onClick: () => void
 }
+
 
 export default function RoomItem({ name, selected, onClick: handleClick }: RoomItemProps) {
 

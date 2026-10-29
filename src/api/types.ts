@@ -1,3 +1,32 @@
+export type Room = {
+  id: string
+  name: string
+  description: string
+}
+
+export type Message = {
+  id: number
+  roomId: string
+  clientMessageId: string
+  authorName: string
+  text: string
+  createdAt: string
+}
+
+export type RoomsResponse = {
+  items: Array<Room>
+}
+
+export type RoomMessagesResponse = {
+  items: Array<Message>
+  pagination: {
+    limit: number
+    hasMore: boolean
+    nextBefore: number
+    nextAfter: number
+  }
+}
+
 export type IdentityRequest = {
   type: 'session:identify'
   requestId: string
@@ -27,7 +56,7 @@ export type JoinRoomResponse = {
   type: 'room:joined'
   requestId: string
   data: {
-    room: { id: string, name: string, description: string }
+    room: Room
   }
 }
 
@@ -59,14 +88,7 @@ export type SendMessageResponse = {
   type: 'message:ack'
   requestId: string
   data: {
-    message: {
-      id: number
-      roomId: string
-      clientMessageId: string
-      authorName: string
-      text: string
-      createdAt: string
-    }
+    message: Message
     duplicate: boolean
   }
 }
@@ -80,7 +102,9 @@ export type ConnectionResponse = {
 
 export type CreatedMessageResponse = {
   type: 'message:created'
-  data: Omit<SendMessageResponse['data'], 'duplicate'>
+  data: {
+    message: Message
+  }
 }
 
 export const errorTypes = {
