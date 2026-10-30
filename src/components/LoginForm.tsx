@@ -14,28 +14,27 @@ export default function LoginForm({ showError, onSubmit: handleSubmit, setValid 
   const formId = useId()
 
   return (
-    <div className={styles.loginForm}>
-      <div className={`${styles.column} ${styles.columnHero}`}>
-        <div className={styles.logo}>
-          <div className={styles.logoSymbol}>#</div>
-          комната
-        </div>
+    <main className={styles.loginForm}>
+      <div className={styles.columnHero}>
         <p className={styles.heroSlogan}>Для тех, кто разбирается вместе</p>
         <h1 className={styles.heroTitle}>
           Хороший вопрос.<br />
           Живой разговор.
         </h1>
         <p className={styles.heroDescription}>Обсуждай JavaScript, React и алгоритмы. Одна тема - одна комната.</p>
-        <div className={styles.topics}>
-          <div className={styles.topic}># JavaScript</div>
-          <div className={styles.topic}># React</div>
-          <div className={styles.topic}># Алгоритмы</div>
-        </div>
+        <ul className={styles.topics}>
+          <li className={styles.topic}># JavaScript</li>
+          <li className={styles.topic}># React</li>
+          <li className={styles.topic}># Алгоритмы</li>
+        </ul>
       </div>
-      <div className={`${styles.column} ${styles.columnForm}`}>
+      <section className={styles.columnForm}>
         <header className={styles.formHeader}>
           <p className={styles.formSlogan}>Без лишних формальностей</p>
-          <h2 className={styles.formTitle}>Давай знакомиться</h2>
+          <h2 className={styles.formTitle}>
+            <span className={styles.fullText}>Давай знакомиться</span>
+            <span className={styles.shortText}>Как тебя зовут?</span>
+          </h2>
           <p className={styles.formHint}>Выбери имя, под которым тебя увидят в общих комнатах</p>
         </header>
         <form onSubmit={handleSubmit} className={styles.form} id={formId}>
@@ -53,14 +52,14 @@ export default function LoginForm({ showError, onSubmit: handleSubmit, setValid 
             }}
           />
           {showError
-            ? <p className={styles.formNoValid}>Имя должно содержать от 2 до 30 символов</p>
-            : <p className={styles.formValid}>От 2 до 30 символов. Можно использовать ник.</p>
+            ? <p className={styles.hintNoValid}>Имя должно содержать от 2 до 30 символов</p>
+            : <p className={styles.hintValid}>От 2 до 30 символов. Можно использовать ник.</p>
           }
 
         </form>
-        <button form={formId} type="submit" className={styles.formSubmit} >Войти в чат</button>
+        <button form={formId} type="submit" className={styles.submit} >Войти в чат</button>
         <p className={styles.formDescription}>Без пароля и регистрации. История комнат общая для всех.</p>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
