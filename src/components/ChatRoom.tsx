@@ -19,17 +19,18 @@ type ChatRoomProps = {
     messages: Message[]
   }
   sendMessage: (text: string) => void
+  className: string
 }
 
 
-export default function ChatRoom({ currentRoom, roomInfo, historyInfo, sendMessage }: ChatRoomProps) {
+export default function ChatRoom({ currentRoom, roomInfo, historyInfo, sendMessage, className }: ChatRoomProps) {
 
   if (currentRoom === null) {
-    return <h1 className={styles.selectRoom}>Выберите комнату</h1>
+    return <h1 className={`${styles.hint} ${className}`}>Выберите комнату</h1>
   }
 
   return (
-    <div className={styles.container}>
+    <section className={`${styles.container} ${className}`}>
       <ChatHeader currentRoom={currentRoom} roomInfo={roomInfo} />
       <MessageList messages={historyInfo.messages}/>
       <MessageForm
@@ -37,6 +38,6 @@ export default function ChatRoom({ currentRoom, roomInfo, historyInfo, sendMessa
         roomInfo={roomInfo}
         sendMessage={sendMessage}
       />
-    </div>
+    </section>
   )
 }

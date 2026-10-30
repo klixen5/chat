@@ -30,12 +30,14 @@ export default function ChatPage({ name }: ChatPageProps) {
           name={name}
           currentRoom={currentRoom}
           setCurrentRoom={setCurrentRoom}
+          className={currentRoom ? styles.hiddenOnMobile : ''}
         />
         <ChatRoom
           currentRoom={currentRoom}
           roomInfo={connection.roomInfo}
           historyInfo={connection.historyInfo}
           sendMessage={sendMessage}
+          className={!currentRoom ? styles.hiddenOnMobile : ''}
         />
       </ChatLayout>
     </div>

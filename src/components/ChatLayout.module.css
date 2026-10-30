@@ -1,7 +1,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
+  margin-inline: auto;
 }
 
 .header {
@@ -17,7 +18,7 @@
   gap: 10px;
   font-size: 18px;
   font-weight: 600;
-  line-height: calc(26 / 18);
+  line-height: 1.5;
 }
 
 .logoSymbol {
@@ -36,7 +37,7 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--color-muted);
-  line-height: calc(18 / 12);
+  line-height: 1.5;
 }
 
 .profileIcon {
@@ -59,4 +60,14 @@
   flex: 1 1 0;
   display: flex;
   min-height: 0;
+}
+
+@media (max-width: 750px) {
+  .profileIcon {
+    display: none;
+  }
+
+  .slogan {
+    display: none;
+  }
 }

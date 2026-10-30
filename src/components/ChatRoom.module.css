@@ -4,10 +4,10 @@
   flex-direction: column;
 }
 
-.selectRoom {
+.hint {
   composes: container;
   justify-content: center;
   align-items: center;
-  font-size: 48px;
+  font-size: 32px;
   color: var(--color-muted);
 }

@@ -9,13 +9,14 @@ type RoomListProps = {
   name: string
   currentRoom: Room | null
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>
+  className: string
 }
 
 type RoomsState = Room[]
 type RoomsStatusState = 'idle' | 'pending' | 'fulfilled' | 'rejected'
 
 
-export default function RoomList({ name, currentRoom, setCurrentRoom }: RoomListProps) {
+export default function RoomList({ name, currentRoom, setCurrentRoom, className }: RoomListProps) {
   const [rooms, setRooms] = useState<RoomsState>([])
   const [roomsStatus, setRoomsStatus] = useState<RoomsStatusState>('idle')
 
@@ -52,7 +53,7 @@ export default function RoomList({ name, currentRoom, setCurrentRoom }: RoomList
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className}`}>
       <h1 className={styles.title}>Комнаты</h1>
       <nav className={styles.buttonMenu}>
         {rooms.map(item =>

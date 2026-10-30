@@ -6,3 +6,9 @@
   font-size: 48px;
   color: var(--color-muted);
 }
+
+@media (max-width: 750px) {
+  .hiddenOnMobile {
+    display: none !important;
+  }
+}

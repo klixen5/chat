@@ -30,3 +30,30 @@
   line-height: calc(20 / 14);
   color: var(--color-text);
 }
+
+@media (max-width: 750px) {
+  .button {
+    position: relative;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-sideBar);
+  }
+
+  .button::after {
+    content: '>';
+    position: absolute;
+    color: var(--color-muted);
+    right: 25px;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    color: var(--color-acent);
+    background-color: var(--color-acentSoft);
+    border-radius: 12px;
+  }
+
+}

@@ -1,5 +1,5 @@
 .container {
-  flex: 0 1 280px;
+  flex: 0 0 280px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -83,6 +83,11 @@
 
 .profileOut {
   margin-left: auto;
-  padding: 16px;
   color: var(--color-muted);
+}
+
+@media (max-width: 750px) {
+  .container {
+    flex: 1;
+  }
 }
