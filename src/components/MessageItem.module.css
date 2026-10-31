@@ -19,4 +19,6 @@
   border: 1px solid var(--color-border);
   background-color: #fff;
   border-radius: 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
