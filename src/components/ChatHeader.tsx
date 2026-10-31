@@ -9,12 +9,13 @@ type ChatHeaderProps = {
     confirmedRoom: Room | null
     error: string | null
   }
+  roomLeave: () => void
 }
 
-export default function ChatHeader({ currentRoom, roomInfo }: ChatHeaderProps) {
+export default function ChatHeader({ currentRoom, roomInfo, roomLeave }: ChatHeaderProps) {
   return (
     <div className={styles.container}>
-      <button className={styles.backBtn}>{'<'}</button>
+      <button className={styles.backBtn} onClick={roomLeave}>{'<'}</button>
       <div>
         <h1 className={styles.title}>
           <span>#</span>

@@ -1,7 +1,7 @@
 import { useState, useRef, useReducer, useEffect, useEffectEvent } from 'react'
 import { restUrl } from '../api/config.ts'
 import { fetchRoomMessages } from '../api/restApi.ts'
-import { type Room, type Message, type Resp, type IdentityRequest, type JoinRoomRequest, type SendMessageRequest } from '../api/types.ts'
+import { type Room, type Message, type Resp, type IdentityRequest, type JoinRoomRequest, type SendMessageRequest, type LeaveRoomRequest } from '../api/types.ts'
 import { reducer, initConnectionState } from './chatReducer.ts'
 
 
@@ -29,6 +29,10 @@ export function useChat(name: string) {
   const updateHistory = useEffectEvent((message: Message) => {
     if (message.roomId !== currentRoom?.id) return
     dispatch({ type: 'updateHistory', message })
+  })
+  const onRoomLeft = useEffectEvent(() => {
+    if (currentRoom !== null) return
+    dispatch({ type: 'roomLeave' })
   })
 
 
@@ -104,6 +108,9 @@ export function useChat(name: string) {
               dispatch({ type: 'historyLoadFailed', error: 'Ошибка при загрузке истории' })
             })
 
+          break
+        case 'room:left':
+          onRoomLeft()
           break
         case 'message:created':
           updateHistory(data.data.message)
@@ -220,8 +227,23 @@ export function useChat(name: string) {
     ws.send(JSON.stringify(req))
   }
 
+  function roomLeave(): void {
+    const ws = websocket.current
+    if (ws === null || ws.readyState !== WebSocket.OPEN) return
 
-  return [currentRoom, setCurrentRoom, connection, sendMessage] as const
+    const requestId = crypto.randomUUID()
+    const req: LeaveRoomRequest = {
+      type: 'room:leave',
+      requestId,
+      data: {}
+    }
+
+    setCurrentRoom(null)
+    ws.send(JSON.stringify(req))
+  }
+
+
+  return [currentRoom, setCurrentRoom, connection, sendMessage, roomLeave] as const
 }
 
 

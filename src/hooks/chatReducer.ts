@@ -38,6 +38,8 @@ type Action = {
   type: 'roomJoinFailed'
   error: string
 } | {
+  type: 'roomLeave'
+} | {
   type: 'historyLoadStarted'
 } | {
   type: 'historyLoadCompleted'
@@ -92,6 +94,8 @@ function reducer(state: State, action: Action): State {
       return { ...state, roomInfo: { status: 'joined', confirmedRoom: action.room, error: null } }
     case 'roomJoinFailed':
       return { ...state, roomInfo: { ...state.roomInfo, status: 'error', error: action.error } }
+    case 'roomLeave':
+      return { ...state, roomInfo: { status: 'idle', confirmedRoom: null, error: null } }
     case 'historyLoadStarted':
       return { ...state, historyInfo: { status: 'loading', messages: [], roomId: null, error: null } }
     case 'historyLoadCompleted': {
