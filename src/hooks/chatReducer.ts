@@ -54,6 +54,14 @@ type Action = {
   type: 'historyLoadFailed'
   error: string
 } | {
+  type: 'historyLoadBeforeStarted'
+} | {
+  type: 'historyLoadBeforeEnded'
+  roomId: string
+  messages: Message[]
+  hasMore: boolean
+  nextBefore: number | null
+} | {
   type: 'messageSendStarted'
 } | {
   type: 'messageConfirmed'
@@ -138,6 +146,29 @@ function reducer(state: State, action: Action): State {
     }
     case 'historyLoadFailed':
       return { ...state, historyInfo: { ...state.historyInfo, status: 'error', error: action.error } }
+    case 'historyLoadBeforeStarted':
+      return { ...state, historyInfo: { ...state.historyInfo, isLoadingMore: true } }
+    case 'historyLoadBeforeEnded': {
+      if (action.roomId !== state.roomInfo.confirmedRoom?.id) {
+        return state
+      }
+      const uniqMessages = new Map<number, Message>
+      for (const mes of [...action.messages, ...state.historyInfo.messages]) {
+        uniqMessages.set(mes.id, mes)
+      }
+      const sortMessages = [...uniqMessages.values()].sort((m1, m2) => m1.id - m2.id)
+      return {
+        ...state,
+        historyInfo: {
+          ...state.historyInfo,
+          messages: sortMessages,
+          hasMore: action.hasMore,
+          nextBefore: action.nextBefore,
+          isLoadingMore: false
+
+        }
+      }
+    }
     case 'messageSendStarted':
       return { ...state, sendInfo: { status: 'sending', message: null, error: null } }
     case 'messageConfirmed':

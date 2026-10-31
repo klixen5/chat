@@ -25,7 +25,7 @@ export async function fetchRooms(signal: AbortSignal): Promise<RoomsResponse> {
 
 export async function fetchRoomMessages(
   roomId: string,
-  signal: AbortSignal,
+  signal?: AbortSignal,
   params?: Params,
 ): Promise<RoomMessagesResponse> {
   const url = new URL(`/api/rooms/${roomId}/messages`, restUrl)

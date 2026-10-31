@@ -10,7 +10,14 @@ type ChatPageProps = {
 }
 
 export default function ChatPage({ name }: ChatPageProps) {
-  const [currentRoom, setCurrentRoom, connection, sendMessage, roomLeave] = useChat(name)
+  const [
+    currentRoom,
+    setCurrentRoom,
+    connection,
+    sendMessage,
+    roomLeave,
+    histotyLoadBefore
+  ] = useChat(name)
 
   switch (connection.connectionInfo.status) {
     case 'connecting':
@@ -38,6 +45,7 @@ export default function ChatPage({ name }: ChatPageProps) {
           historyInfo={connection.historyInfo}
           sendMessage={sendMessage}
           roomLeave={roomLeave}
+          historyLoadBefore={histotyLoadBefore}
           className={!currentRoom ? styles.hiddenOnMobile : ''}
         />
       </ChatLayout>

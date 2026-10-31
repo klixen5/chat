@@ -37,7 +37,6 @@ export function useChat(name: string) {
     dispatch({ type: 'roomLeave' })
   })
 
-
   useEffect(() => {
     const ws = new WebSocket(WEBSOCKET_PATH)
     websocket.current = ws
@@ -244,8 +243,26 @@ export function useChat(name: string) {
     ws.send(JSON.stringify(req))
   }
 
+  function historyLoadBefore(): void {
+    if (connection.roomInfo.confirmedRoom === null) return
+    if (!connection.historyInfo.hasMore || connection.historyInfo.isLoadingMore) return
 
-  return [currentRoom, setCurrentRoom, connection, sendMessage, roomLeave] as const
+    const room = connection.roomInfo.confirmedRoom
+    dispatch({ type: 'historyLoadBeforeStarted' })
+    fetchRoomMessages(connection.roomInfo.confirmedRoom.id, undefined, { limit: 30, before: connection.historyInfo.messages[0].id })
+      .then(response => {
+        dispatch({
+          type: 'historyLoadBeforeEnded',
+          roomId: room.id,
+          messages: response.items,
+          hasMore: response.pagination.hasMore,
+          nextBefore: response.pagination.nextBefore
+        })
+      })
+  }
+
+
+  return [currentRoom, setCurrentRoom, connection, sendMessage, roomLeave, historyLoadBefore] as const
 }
 
 

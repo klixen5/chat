@@ -14,10 +14,11 @@ type MessageListProps = {
     nextBefore: number | null
     isLoadingMore: boolean
   }
+  historyLoadBefore: () => void
 }
 
 
-export default function MessageList({ historyInfo }: MessageListProps) {
+export default function MessageList({ historyInfo, historyLoadBefore }: MessageListProps) {
   const list = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -28,7 +29,11 @@ export default function MessageList({ historyInfo }: MessageListProps) {
 
   return (
     <div ref={list} className={styles.container}>
-      {historyInfo.hasMore ? <button className={styles.loadBtn}>Загрузить предыдущие 30 сообщений</button> : <span className={styles.endText}>Сообщений больше нет</span>}
+      {
+        historyInfo.hasMore
+        ? <button className={styles.loadBtn} onClick={historyLoadBefore}>Загрузить предыдущие 30 сообщений</button>
+        : <span className={styles.endText}>Сообщений больше нет</span>
+      }
       {historyInfo.messages.map(message => <MessageItem key={message.id} message={message} />)}
     </div>
   )
