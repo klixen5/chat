@@ -5,6 +5,10 @@
   padding: 18px 32px;
 }
 
+.backBtn {
+  display: none;
+}
+
 .title {
   display: flex;
   gap: 5px;
@@ -42,4 +46,34 @@
 .pendingStatus {
   color: var(--color-pending);
   background-color: var(--color-pendingSoft);
+}
+
+@media (max-width: 750px) {
+  .container {
+    justify-content: start;
+    gap: 10px;
+    padding-inline: 10px;
+  }
+
+  .backBtn {
+    display: inline;
+    padding: 10px;
+    border: none;
+    font-size: inherit;
+    background-color: transparent;
+    color: var(--color-muted);
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .description {
+    font-weight: 500;
+  }
+
+  .statusEl {
+    display: none;
+  }
 }

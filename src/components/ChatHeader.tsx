@@ -14,6 +14,7 @@ type ChatHeaderProps = {
 export default function ChatHeader({ currentRoom, roomInfo }: ChatHeaderProps) {
   return (
     <div className={styles.container}>
+      <button className={styles.backBtn}>{'<'}</button>
       <div>
         <h1 className={styles.title}>
           <span>#</span>
