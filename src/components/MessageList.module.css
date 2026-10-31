@@ -3,7 +3,12 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-bottom: 10px;
   background-color: var(--color-canvas);
   min-height: auto;
   overflow: auto;
+}
+
+.container > :first-child {
+  margin-top: auto;
 }
