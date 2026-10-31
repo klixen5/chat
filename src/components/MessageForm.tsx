@@ -1,4 +1,4 @@
-import { type SubmitEvent, useState } from 'react'
+import { type SubmitEvent, type KeyboardEvent, useState } from 'react'
 import { type RoomStatus } from "../hooks/chatReducer.ts";
 import { type Room } from "../api/types.ts";
 import styles from './MessageForm.module.css'
@@ -18,7 +18,7 @@ type MessageFromProps = {
 export default function MessageForm({ currentRoom, roomInfo, sendMessage }: MessageFromProps) {
   const [text, setText] = useState('')
 
-  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
+  function handleSubmit(e: SubmitEvent<HTMLFormElement>): void {
     e.preventDefault()
     if (text.trim() === '') {
       return
@@ -26,6 +26,13 @@ export default function MessageForm({ currentRoom, roomInfo, sendMessage }: Mess
 
     setText('')
     sendMessage(text)
+  }
+
+  function handleEnterDown(e: KeyboardEvent<HTMLTextAreaElement>): void {
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault()
+      e.currentTarget.form?.requestSubmit()
+    }
   }
 
   return (
@@ -39,6 +46,7 @@ export default function MessageForm({ currentRoom, roomInfo, sendMessage }: Mess
           placeholder="Сообщение"
           value={text}
           onChange={e => setText(e.target.value)}
+          onKeyDown={handleEnterDown}
         />
         <button type="submit" className={styles.button} disabled={!(roomInfo.status === 'joined' && roomInfo.confirmedRoom?.id === currentRoom.id)}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
