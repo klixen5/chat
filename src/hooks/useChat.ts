@@ -1,7 +1,7 @@
 import { useState, useRef, useReducer, useEffect, useEffectEvent } from 'react'
 import { restUrl } from '../api/config.ts'
 import { fetchRoomMessages } from '../api/restApi.ts'
-import { type Room, type Message, type Resp, type IdentityRequest, type JoinRoomRequest, type SendMessageRequest, type LeaveRoomRequest } from '../api/types.ts'
+import { type Room, type Message, type RoomMessagesResponse, type Resp, type IdentityRequest, type JoinRoomRequest, type SendMessageRequest, type LeaveRoomRequest } from '../api/types.ts'
 import { reducer, initConnectionState } from './chatReducer.ts'
 
 
@@ -15,7 +15,7 @@ export function useChat(name: string) {
   const requestTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>())
   const pendingJoinId = useRef<string | null>(null)
   const historyController = useRef(new AbortController())
-  const onHistoryLoaded = useEffectEvent((roomId: string, messages: Message[]) => {
+  const onHistoryLoaded = useEffectEvent((roomId: string, response: RoomMessagesResponse) => {
     if (roomId !== connection.roomInfo.confirmedRoom?.id) {
       return
     }
@@ -23,7 +23,9 @@ export function useChat(name: string) {
     dispatch({
       type: 'historyLoadCompleted',
       roomId: roomId,
-      messages: messages
+      messages: response.items,
+      hasMore: response.pagination.hasMore,
+      nextBefore: response.pagination.nextBefore
     })
   })
   const updateHistory = useEffectEvent((message: Message) => {
@@ -99,7 +101,7 @@ export function useChat(name: string) {
           historyController.current = controller
 
           fetchRoomMessages(data.data.room.id, controller.signal)
-            .then(response => onHistoryLoaded(data.data.room.id, response.items))
+            .then(response => onHistoryLoaded(data.data.room.id, response))
             .catch((e: unknown) => {
               if (e instanceof Error && e.name === 'AbortError') {
                 return

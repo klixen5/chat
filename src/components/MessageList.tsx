@@ -1,25 +1,35 @@
 import MessageItem from './MessageItem.tsx'
 import { useRef, useEffect } from 'react'
+import { type HistoryStatus } from '../hooks/chatReducer.ts'
 import { type Message } from '../api/types.ts'
 import styles from './MessageList.module.css'
 
 type MessageListProps = {
-  messages: Message[]
+  historyInfo: {
+    roomId: string | null
+    status: HistoryStatus
+    messages: Message[]
+    error: string | null
+    hasMore: boolean
+    nextBefore: number | null
+    isLoadingMore: boolean
+  }
 }
 
 
-export default function MessageList({ messages }: MessageListProps) {
+export default function MessageList({ historyInfo }: MessageListProps) {
   const list = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (list.current === null) return
 
     list.current.scrollTop = list.current.scrollHeight - list.current.clientHeight
-  }, [messages])
+  }, [historyInfo.messages])
 
   return (
     <div ref={list} className={styles.container}>
-      {messages.map(message => <MessageItem key={message.id} message={message} />)}
+      {historyInfo.hasMore ? <button className={styles.loadBtn}>Загрузить предыдущие 30 сообщений</button> : <span className={styles.endText}>Сообщений больше нет</span>}
+      {historyInfo.messages.map(message => <MessageItem key={message.id} message={message} />)}
     </div>
   )
 }

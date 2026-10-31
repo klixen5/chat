@@ -17,6 +17,10 @@ type ChatRoomProps = {
     roomId: string | null
     status: HistoryStatus
     messages: Message[]
+    error: string | null
+    hasMore: boolean
+    nextBefore: number | null
+    isLoadingMore: boolean
   }
   sendMessage: (text: string) => void
   roomLeave: () => void
@@ -37,7 +41,7 @@ export default function ChatRoom({ currentRoom, roomInfo, historyInfo, sendMessa
         roomInfo={roomInfo}
         roomLeave={roomLeave}
       />
-      <MessageList messages={historyInfo.messages} />
+      <MessageList historyInfo={historyInfo} />
       <MessageForm
         currentRoom={currentRoom}
         roomInfo={roomInfo}

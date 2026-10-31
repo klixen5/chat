@@ -16,6 +16,9 @@ type State = {
     status: HistoryStatus
     messages: Message[]
     error: string | null
+    hasMore: boolean
+    nextBefore: number | null
+    isLoadingMore: boolean
   }
   sendInfo: {
     status: SendStatus
@@ -45,6 +48,8 @@ type Action = {
   type: 'historyLoadCompleted'
   roomId: string
   messages: Message[]
+  hasMore: boolean
+  nextBefore: number | null
 } | {
   type: 'historyLoadFailed'
   error: string
@@ -80,7 +85,10 @@ function reducer(state: State, action: Action): State {
         },
         historyInfo: {
           ...state.historyInfo,
-          status: state.historyInfo.status === 'loading' ? 'idle' : state.historyInfo.status
+          status: state.historyInfo.status === 'loading' ? 'idle' : state.historyInfo.status,
+          hasMore: false,
+          nextBefore: null,
+          isLoadingMore: false
         },
         sendInfo: {
           status: 'idle',
@@ -97,14 +105,36 @@ function reducer(state: State, action: Action): State {
     case 'roomLeave':
       return { ...state, roomInfo: { status: 'idle', confirmedRoom: null, error: null } }
     case 'historyLoadStarted':
-      return { ...state, historyInfo: { status: 'loading', messages: [], roomId: null, error: null } }
+      return {
+        ...state,
+        historyInfo: {
+          status: 'loading',
+          messages: [],
+          roomId: null,
+          error: null,
+          hasMore: false,
+          nextBefore: null,
+          isLoadingMore: false
+        }
+      }
     case 'historyLoadCompleted': {
       const uniqueMessages = new Map<number, Message>
       for (const mes of [...state.historyInfo.messages, ...action.messages]) {
         uniqueMessages.set(mes.id, mes)
       }
       const sortMessages = [...uniqueMessages.values()].sort((m1, m2) => m1.id - m2.id)
-      return {...state, historyInfo: {status: 'ready', messages: sortMessages, roomId: action.roomId, error: null } }
+      return {
+        ...state,
+        historyInfo: {
+          status: 'ready',
+          messages: sortMessages,
+          roomId: action.roomId,
+          error: null,
+          hasMore: action.hasMore,
+          nextBefore: action.nextBefore,
+          isLoadingMore: false
+        }
+      }
     }
     case 'historyLoadFailed':
       return { ...state, historyInfo: { ...state.historyInfo, status: 'error', error: action.error } }
@@ -154,7 +184,10 @@ const initConnectionState: State = {
     roomId: null,
     status: 'idle',
     messages: [],
-    error: null
+    error: null,
+    hasMore: false,
+    nextBefore: null,
+    isLoadingMore: false
   },
   sendInfo: {
     status: 'idle',
