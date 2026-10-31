@@ -22,8 +22,8 @@ export type RoomMessagesResponse = {
   pagination: {
     limit: number
     hasMore: boolean
-    nextBefore: number
-    nextAfter: number
+    nextBefore: number | null
+    nextAfter: number | null
   }
 }
 
