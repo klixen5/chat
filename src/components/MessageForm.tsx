@@ -31,9 +31,10 @@ export default function MessageForm({ currentRoom, roomInfo, sendMessage }: Mess
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <input
+        <textarea
           id="message"
           className={styles.input}
+          rows={1}
           name="message"
           placeholder="Сообщение"
           value={text}
