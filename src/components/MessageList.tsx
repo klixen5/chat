@@ -20,18 +20,30 @@ type MessageListProps = {
 
 export default function MessageList({ historyInfo, historyLoadBefore }: MessageListProps) {
   const list = useRef<HTMLDivElement | null>(null)
+  const skipNextScroll = useRef(false)
 
   useEffect(() => {
-    if (list.current === null) return
+    if (skipNextScroll.current) {
+      skipNextScroll.current = false
+      return
+    }
 
-    list.current.scrollTop = list.current.scrollHeight - list.current.clientHeight
+    const element = list.current
+    if (element === null) return
+
+    element.scrollTop = element.scrollHeight - element.clientHeight
   }, [historyInfo.messages])
+
+  function handleHistoryLoadBefore(): void {
+    skipNextScroll.current = true
+    historyLoadBefore()
+  }
 
   return (
     <div ref={list} className={styles.container}>
       {
         historyInfo.hasMore
-        ? <button className={styles.loadBtn} onClick={historyLoadBefore}>Загрузить предыдущие 30 сообщений</button>
+        ? <button className={styles.loadBtn} onClick={handleHistoryLoadBefore}>Загрузить предыдущие 30 сообщений</button>
         : <span className={styles.endText}>Сообщений больше нет</span>
       }
       {historyInfo.messages.map(message => <MessageItem key={message.id} message={message} />)}
