@@ -9,6 +9,7 @@ type RoomListProps = {
   name: string
   currentRoom: Room | null
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>
+  outProfile: () => void
   className: string
 }
 
@@ -16,7 +17,7 @@ type RoomsState = Room[]
 type RoomsStatusState = 'idle' | 'pending' | 'fulfilled' | 'rejected'
 
 
-export default function RoomList({ name, currentRoom, setCurrentRoom, className }: RoomListProps) {
+export default function RoomList({ name, currentRoom, setCurrentRoom, outProfile, className }: RoomListProps) {
   const [rooms, setRooms] = useState<RoomsState>([])
   const [roomsStatus, setRoomsStatus] = useState<RoomsStatusState>('idle')
 
@@ -75,9 +76,11 @@ export default function RoomList({ name, currentRoom, setCurrentRoom, className 
           <p className={styles.profileName}>{name}</p>
           <p className={styles.profileDescription}>Вход под именем</p>
         </div>
-        <svg className={styles.profileOut} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.91667 0.75H0.75V12.4167H4.91667M8.25 9.91667L11.5833 6.58333L8.25 3.25M11.5833 6.58333H3.25" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="currentColor"/>
-        </svg>
+        <button className={styles.btnOut} onClick={outProfile}>
+          <svg className={styles.profileOutIcon} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.91667 0.75H0.75V12.4167H4.91667M8.25 9.91667L11.5833 6.58333L8.25 3.25M11.5833 6.58333H3.25" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="currentColor"/>
+          </svg>
+        </button>
       </section>
     </div>
   )

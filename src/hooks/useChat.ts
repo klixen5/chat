@@ -261,7 +261,6 @@ export function useChat(name: string) {
       })
   }
 
-
   return [currentRoom, setCurrentRoom, connection, sendMessage, roomLeave, historyLoadBefore] as const
 }
 

@@ -7,16 +7,17 @@ import styles from './ChatPage.module.css'
 
 type ChatPageProps = {
   name: string
+  outProfile: () => void
 }
 
-export default function ChatPage({ name }: ChatPageProps) {
+export default function ChatPage({ name, outProfile }: ChatPageProps) {
   const [
     currentRoom,
     setCurrentRoom,
     connection,
     sendMessage,
     roomLeave,
-    histotyLoadBefore
+    historyLoadBefore
   ] = useChat(name)
 
   switch (connection.connectionInfo.status) {
@@ -37,6 +38,7 @@ export default function ChatPage({ name }: ChatPageProps) {
           name={name}
           currentRoom={currentRoom}
           setCurrentRoom={setCurrentRoom}
+          outProfile={outProfile}
           className={currentRoom ? styles.hiddenOnMobile : ''}
         />
         <ChatRoom
@@ -45,7 +47,7 @@ export default function ChatPage({ name }: ChatPageProps) {
           historyInfo={connection.historyInfo}
           sendMessage={sendMessage}
           roomLeave={roomLeave}
-          historyLoadBefore={histotyLoadBefore}
+          historyLoadBefore={historyLoadBefore}
           className={!currentRoom ? styles.hiddenOnMobile : ''}
         />
       </ChatLayout>

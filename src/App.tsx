@@ -30,7 +30,7 @@ export default function App() {
     return () => controller.abort()
   }, []);
 
-  function handleSubmitLoginForm(e: SubmitEvent<HTMLFormElement>) {
+  function handleSubmitLoginForm(e: SubmitEvent<HTMLFormElement>): void{
     e.preventDefault()
     const form = e.currentTarget
     const name = (new FormData(form).get('username') as string).trim()
@@ -40,6 +40,10 @@ export default function App() {
     } else {
       setValid(false)
     }
+  }
+
+  function outProfile(): void {
+    setName(null)
   }
 
   if (checkServerStatus === 'idle' || checkServerStatus === 'pending') {
@@ -52,7 +56,7 @@ export default function App() {
 
   return name === null
     ? <LoginForm showError={!valid} onSubmit={handleSubmitLoginForm} setValid={setValid} />
-    : <ChatPage name={name} />
+    : <ChatPage name={name} outProfile={outProfile} />
 }
 
 
