@@ -44,7 +44,7 @@ export default function MessageList({ historyInfo, historyLoadBefore }: MessageL
       {
         historyInfo.hasMore
         ? <button className={styles.loadBtn} onClick={handleHistoryLoadBefore}>Загрузить предыдущие 30 сообщений</button>
-        : <span className={styles.endText}>Сообщений больше нет</span>
+        : <span className={styles.endText}>{historyInfo.messages.length === 0 ? 'Сообщений нет' : 'Сообщений больше нет'}</span>
       }
       {historyInfo.messages.map(message => <MessageItem key={message.id} message={message} />)}
     </div>
